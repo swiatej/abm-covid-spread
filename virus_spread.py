@@ -252,7 +252,7 @@ class human:
 
 
     def infection(self):
-        global hours, day, week_count
+        global hours, day, week_count,df
         if self.x == self.home_x:
             # if at home, they can't get infected
             return
@@ -298,6 +298,9 @@ class human:
                     self.infection_loc = str(self.x) + ", " + str(self.y)
                 t = "Week " + str(week_count) + " " + day + " "+str(hours)
                 self.infection_time = t
+                df2 = pd.DataFrame([[self.infection_time,self.infection_loc]], columns=[ 'Time', 'Location'])
+                df1 = df
+                df = pd.concat([df1,df2])
 
 
 
@@ -416,15 +419,8 @@ def move_all_one_step():
 def refresh_model():
     global df, hours, day, week_count,humans
     move_all_one_step()
-    t = "Week " + str(week_count) + " " + day + str(hours)
-    for h in humans:
-        if h.infection_time != "":
-            df2 = pd.DataFrame([[h.infection_time,h.infection_loc]], columns=[ 'Time', 'Location'])
-            df1 = df
-            df = pd.concat([df1,df2])
-            h.infection_time = ""
-            h.infection_loc = ""
+
 
 
 pycxsimulator.GUI().start(func=[set_up_abm_environment, display_model, refresh_model])
-df.to_csv('locations_infected_counts.csv')
+#df.to_csv('locations_infected_counts.csv')

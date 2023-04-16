@@ -12,8 +12,7 @@ p_covid = 0.1 # probability that person has covid
 
 # set parameters for movement and probability threshold
 m = 0.12
-counts = {}
-df = pd.DataFrame(columns = ['Time','Location'])
+
 
 class nubar:
     def __init__(self):
@@ -59,6 +58,7 @@ class human:
         self.covid_prob = 0.001
         self.quarantine = 0
         self.infection_loc = ""
+        self.infection_time = ""
 
 
     def change_status(self):
@@ -252,6 +252,7 @@ class human:
 
 
     def infection(self):
+        global hours, day, week_count
         if self.x == self.home_x:
             # if at home, they can't get infected
             return
@@ -269,6 +270,8 @@ class human:
         if self.x == business.x and self.y == business.y:
             temp_covid_prob = self.covid_prob * 2
         if self.x == computing.x and self.y == computing.y:
+            temp_covid_prob = self.covid_prob * 2
+        if self.x == library.x and self.y == library.y:
             temp_covid_prob = self.covid_prob * 2
 
 
@@ -289,11 +292,15 @@ class human:
                     self.infection_loc = "computing"
                 elif self.x == science.x and self.y == science.y:
                     self.infection_loc = "science"
+                elif self.x == library.x and self.y == library.y:
+                    self.infection_loc = "library"
                 else:
                     self.infection_loc = str(self.x) + ", " + str(self.y)
-                t = "Week " + str(week_count) + " " + day + str(hours)
-                df = df.append(pd.DataFrame([t,self.infection_loc], columns=[ 'Time', 'Location']),
-                    ignore_index = True)
+                t = "Week " + str(week_count) + " " + day + " "+str(hours)
+                self.infection_time = t
+
+
+
 
 
 
@@ -318,10 +325,10 @@ def create_population():
     return humans
 
 def set_up_abm_environment():
-    global humans,infected_student_data, a, time, day,library, business, computing, science, nubar, gym, week_count
+    global humans,df, time, day,library, business, computing, science, nubar, gym, week_count
     time = 0
     week_count = 0
-    infected_student_data = {}
+    df = pd.DataFrame(columns = ['Time','Location'])
     humans = create_population()
     library = library()
     gym = gym()
@@ -407,12 +414,17 @@ def move_all_one_step():
 
     
 def refresh_model():
-    global infected_student_data, hours, day, week_count,humans
+    global df, hours, day, week_count,humans
     move_all_one_step()
+    t = "Week " + str(week_count) + " " + day + str(hours)
+    for h in humans:
+        if h.infection_time != "":
+            df2 = pd.DataFrame([[h.infection_time,h.infection_loc]], columns=[ 'Time', 'Location'])
+            df1 = df
+            df = pd.concat([df1,df2])
+            h.infection_time = ""
+            h.infection_loc = ""
 
-    temp = str(week_count) + " "+ str(day)
-    infected_student_data[temp] = sum([1 for h in humans if h.covid_status == 'infected'])
-    
 
 pycxsimulator.GUI().start(func=[set_up_abm_environment, display_model, refresh_model])
 df.to_csv('locations_infected_counts.csv')

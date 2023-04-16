@@ -87,7 +87,7 @@ class human:
             self.evening_status = 'library' if prob >= 0.5 else 'gym'
 
     def move_wknd(self, m, time):
-        if self.weekend_status == 'gym' and time > 10 and time < 16:
+        if self.weekend_status == 'gym' and time > 10 and time < 17:
             try:
                 x_move = (gym.x - self.x) / abs(gym.x - self.x)
                 y_move = (gym.y- self.y) / abs(gym.y - self.y)
@@ -95,8 +95,16 @@ class human:
             except ZeroDivisionError:
                 x_move, y_move = 0, 0
                 pass
+            if x_move==0:
+                self.x += uniform(-2*m, 2*m)
+            else:
+                self.x += x_move*m
+            if y_move==0:
+                self.y += uniform(-2*m, 2*m)
+            else:
+                self.y += y_move*m
 
-        if self.weekend_status == 'library' and time > 10 and time <= 17:
+        elif self.weekend_status == 'library' and time > 10 and time <= 17:
 
             try:
                 x_move = (library.x - self.x) / abs(library.x - self.x)
@@ -105,8 +113,16 @@ class human:
             except ZeroDivisionError:
                 x_move, y_move = 0, 0
                 pass
+            if x_move==0:
+                self.x += uniform(-2*m, 2*m)
+            else:
+                self.x += x_move*m
+            if y_move==0:
+                self.y += uniform(-2*m, 2*m)
+            else:
+                self.y += y_move*m
 
-        if self.weekend_status == 'nubar' and time > 18 and time <= 24:
+        elif self.weekend_status == 'nubar' and time > 18 and time <= 24:
             try:
                 x_move = (nubar.x - self.x) / abs(nubar.x - self.x)
                 y_move = (nubar.y- self.y) / abs(nubar.y - self.y)
@@ -114,6 +130,14 @@ class human:
             except ZeroDivisionError:
                 x_move, y_move = 0, 0
                 pass
+            if x_move==0:
+                self.x += uniform(-2*m, 2*m)
+            else:
+                self.x += x_move*m
+            if y_move==0:
+                self.y += uniform(-2*m, 2*m)
+            else:
+                self.y += y_move*m
 
         else:
             try:
@@ -123,14 +147,14 @@ class human:
                 x_move, y_move = 0, 0
                 pass
 
-        if x_move==0:
-            self.x += uniform(-2*m, 2*m)
-        else:
-            self.x += x_move*m
-        if y_move==0:
-            self.y += uniform(-2*m, 2*m)
-        else:
-            self.y += y_move*m
+            if x_move==0:
+                self.x += uniform(-2*m, 2*m)
+            else:
+                self.x += x_move*m
+            if y_move==0:
+                self.y += uniform(-2*m, 2*m)
+            else:
+                self.y += y_move*m
         # correct x and y values if any individuals have been moved off the map
         self.x = 1 if self.x > 1 else 0 if self.x < 0 else self.x
         self.y = 1 if self.y > 1 else 0 if self.y < 0 else self.y

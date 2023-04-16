@@ -10,7 +10,7 @@ from random import random,choice
 population = 1000 # human population
 p_covid = 0.1 # probability that person has covid
 
-# set parameters for movement and probability threshold
+# set parameters for movement
 m = 0.12
 
 

@@ -252,7 +252,7 @@ class human:
 
 
     def infection(self):
-        global hours, day, week_count,df
+        global hours, day, week_count
         if self.x == self.home_x:
             # if at home, they can't get infected
             return
@@ -296,14 +296,6 @@ class human:
                     self.infection_loc = "library"
                 else:
                     self.infection_loc = str(self.x) + ", " + str(self.y)
-                t = "Week " + str(week_count) + " " + day + " "+str(hours)
-                self.infection_time = t
-                df2 = pd.DataFrame([[self.infection_time,self.infection_loc]], columns=[ 'Time', 'Location'])
-                df1 = df
-                df = pd.concat([df1,df2])
-
-
-
 
 
 
@@ -328,10 +320,9 @@ def create_population():
     return humans
 
 def set_up_abm_environment():
-    global humans,df, time, day,library, business, computing, science, nubar, gym, week_count
+    global humans,time, day,library, business, computing, science, nubar, gym, week_count
     time = 0
     week_count = 0
-    df = pd.DataFrame(columns = ['Time','Location'])
     humans = create_population()
     library = library()
     gym = gym()
@@ -417,10 +408,9 @@ def move_all_one_step():
 
     
 def refresh_model():
-    global df, hours, day, week_count,humans
+    global hours, day, week_count,humans
     move_all_one_step()
 
 
 
 pycxsimulator.GUI().start(func=[set_up_abm_environment, display_model, refresh_model])
-#df.to_csv('locations_infected_counts.csv')

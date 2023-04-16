@@ -409,7 +409,7 @@ def move_all_one_step():
             if h.covid_status == 'infected' and h.days_infected == 14:
                 h.covid_status = 'normal'
                 h.days_infected = 0
-                h.covid_prob = 0.0001 #reset probability
+                h.covid_prob = 0.001 #reset probability
                 if h.vaccinations == 1:
                     h.covid_prob /=2
                 if h.mask_wearing == 1:

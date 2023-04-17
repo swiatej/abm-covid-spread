@@ -1,4 +1,4 @@
-# Agent-Based Model for COVID-19 spread
+# Agent-Based Model for COVID-19 spread in DCU campus
 
 ### _This project is a group assignment for the CA4024 "Building Complex Computational Models" module._
 ---

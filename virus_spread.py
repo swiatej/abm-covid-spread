@@ -3,15 +3,13 @@ from pylab import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import urllib
-import PIL
 from random import random,choice
 
 population = 1000 # human population
 p_covid = 0.1 # probability that person has covid
 
-# set parameters for movement
-m = 0.12
+# set parameters for movement and probability threshold
+m = 0.13
 
 
 class nubar:
@@ -40,7 +38,7 @@ class gym:
         self.x = 0.3
         self.y = 0.86
 
-# create human class 
+# create human class
 class human:
     def __init__(self, i):
         self.x = random()
@@ -59,6 +57,7 @@ class human:
         self.quarantine = 0
         self.infection_loc = ""
         self.infection_time = ""
+        self.id = 0
 
 
     def change_status(self):
@@ -270,13 +269,13 @@ class human:
                 self.y += uniform(-2*m, 2*m)
             else:
                 self.y += y_move*m
-        # correct x and y values if any individuals have been moved off the map    
+        # correct x and y values if any individuals have been moved off the map
         self.x = 1 if self.x > 1 else 0 if self.x < 0 else self.x
         self.y = 1 if self.y > 1 else 0 if self.y < 0 else self.y
 
 
     def infection(self):
-        global hours, day, week_count
+        global hours, day, week_count,df
         if self.x == self.home_x:
             # if at home, they can't get infected
             return
@@ -303,37 +302,35 @@ class human:
         if len(temp) == 0:
             return
         # find closest human
-        if closest_human(self.x, self.y, temp) < 0.001:
+        hum_id, distance, faculty = closest_human(self.x, self.y, temp)
+        if distance < 0.001:
             self.covid_status = 'infected' if random() < temp_covid_prob else self.covid_status
             if self.covid_status == 'infected':
-                if self.x == nubar.x and self.y == nubar.y:
-                    self.infection_loc = "nubar"
-                elif self.x == gym.x and self.y == gym.y:
-                    self.infection_loc = "gym"
-                elif self.x == business.x and self.y == business.y:
-                    self.infection_loc = "business"
-                elif self.x == computing.x and self.y == computing.y:
-                    self.infection_loc = "computing"
-                elif self.x == science.x and self.y == science.y:
-                    self.infection_loc = "science"
-                elif self.x == library.x and self.y == library.y:
-                    self.infection_loc = "library"
-                else:
-                    self.infection_loc = str(self.x) + ", " + str(self.y)
+                self.infection_loc = str(self.x) + ", " + str(self.y)
+                t = "Week " + str(week_count) + " " + day + " "+str(hours)
+                self.infection_time = t
+                df2 = pd.DataFrame([[hum_id,faculty,self.id,self.status,self.infection_time]], columns=[
+                                   'Spreader_id', 'Spreader_faculty','Infected_id','Infected_faculty','Time_of_infection'])
+                df1 = df
+                df = pd.concat([df1,df2])
 
 
 
 def closest_human(x, y, humans):
     point = np.array((x, y))
+    human_ids = np.array([h.id for h in humans])
+    human_faculties = np.array([h.status for h in humans])
     humans = np.array([[h.x, h.y] for h in humans])
     distance = np.sum((humans - point)**2, axis=1)
-    return np.argmin(distance)
+
+    return human_ids[np.argmin(distance)], distance[np.argmin(distance)], human_faculties[np.argmin(distance)] # returns closest human id and distance, and faculty
 
 
 def create_population():
     humans = []
     for i in range(population):
         h = human(i)
+        h.id = i
         if h.mask_wearing ==1:
             h.covid_prob /= 2
 
@@ -344,9 +341,14 @@ def create_population():
     return humans
 
 def set_up_abm_environment():
-    global humans,time, day,library, business, computing, science, nubar, gym, week_count
+    global humans,df, time, day,library, business, computing, science, nubar, gym, week_count,student_isolation_counts
     time = 0
     week_count = 0
+    # create dataframe for number of infected people and number of isolating people
+    student_isolation_counts = pd.DataFrame(columns=['time','number_isolating','number_infected'])
+    # create dataframe for spreaders and newly infected people
+    df = pd.DataFrame(columns=[
+                                   'Spreader_id', 'Spreader_faculty','Infected_id','Infected_faculty','Time_of_infection'])
     humans = create_population()
     library = library()
     gym = gym()
@@ -355,7 +357,7 @@ def set_up_abm_environment():
     science = science()
     business = business()
 
-    
+
 def display_model():
     global time, day,library, business, computing, science, nubar, gym, week_count, hours
     cla()
@@ -409,7 +411,7 @@ def move_all_one_step():
             if h.covid_status == 'infected' and h.days_infected == 14:
                 h.covid_status = 'normal'
                 h.days_infected = 0
-                h.covid_prob = 0.001 #reset probability
+                h.covid_prob = 0.0001 #reset probability
                 if h.vaccinations == 1:
                     h.covid_prob /=2
                 if h.mask_wearing == 1:
@@ -430,11 +432,20 @@ def move_all_one_step():
                 h.move(m, hours)
                 h.infection()
 
-    
+
 def refresh_model():
-    global hours, day, week_count,humans
+    global df, hours, day, week_count,humans,student_isolation_counts
     move_all_one_step()
 
-
+    # saving number of infected / isolating people
+    if hours == 23:
+        l = sum([1 for h in humans if h.covid_status =='infected'])
+        m = sum([1 for h in humans if h.quarantine == 1 and h.covid_status == 'infected'])
+        t = "Week " + str(week_count) + " " + day + " "+str(hours)
+        student_isolation = pd.DataFrame([[t,m,l]],columns=['time','number_isolating','number_infected'])
+        temp = student_isolation_counts
+        student_isolation_counts = pd.concat([temp,student_isolation])
 
 pycxsimulator.GUI().start(func=[set_up_abm_environment, display_model, refresh_model])
+df.to_csv('people_infect_most_often_.csv')
+student_isolation_counts.to_csv('student_isolation_counts.csv')

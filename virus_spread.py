@@ -299,7 +299,7 @@ class human:
             temp_covid_prob = self.covid_prob * 2
 
 
-        temp = [h for h in humans if h.covid_status == 'infected' and h.quarantine == 0 and h.days_infected >=7 and h.days_infected <= 14]
+        temp = [h for h in humans if h.covid_status == 'infected' and h.quarantine == 0 and h.days_infected >=6 and h.days_infected <= 13]
         if len(temp) == 0:
             return
         # find closest human

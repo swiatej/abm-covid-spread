@@ -18,7 +18,7 @@ The model has an easy-to-use GUI: the user can change parameters such as probabi
 The model is designed to be as accurate as possible:
 
 * People are more prone to infections in areas such as the gym or the bar
-* People are only infectious 7 days after they contract COVID, and recover 7 days later
+* People are only infectious on days 6-13 of their sickness, and recover on day 14
 * While sick, a portion of people chooses to self-isolate at home, thus not infecting anyone
 * Masks and vaccinations lessen the chances of becoming infected
 * People are not able to transmit COVID when they are at home

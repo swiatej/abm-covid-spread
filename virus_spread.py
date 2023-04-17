@@ -447,5 +447,5 @@ def refresh_model():
         student_isolation_counts = pd.concat([temp,student_isolation])
 
 pycxsimulator.GUI().start(func=[set_up_abm_environment, display_model, refresh_model])
-df.to_csv('people_infect_most_often_.csv')
-student_isolation_counts.to_csv('student_isolation_counts.csv')
+df.to_csv('Infections_ID.csv')
+student_isolation_counts.to_csv('Isolation_And_Infection_Counts.csv')

@@ -4,6 +4,8 @@ This project is a group assignment for the CA4024 "Building Complex Computationa
 ---
 
 ## How to run model
+
+
 The main python code is stored in [**virus_spread.py**](virus_spread.py) file and the code for a 2D graphical display of the model's performance is presented in [**pycxsimulator.py**](pycxsimulator.py) file.
 
 The user should be able to run the model by cloning this repository, and running "python virus_spread.py" in their terminal.

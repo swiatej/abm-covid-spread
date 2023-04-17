@@ -1,10 +1,9 @@
 # Agent-Based Model for COVID-19 spread
 
-This project is a group assignment for the CA4024 "Building Complex Computational Models" module.
+_This project is a group assignment for the CA4024 "Building Complex Computational Models" module._
 ---
 
 ## How to run model
-
 
 The main python code is stored in [**virus_spread.py**](virus_spread.py) file and the code for a 2D graphical display of the model's performance is presented in [**pycxsimulator.py**](pycxsimulator.py) file. [**dcu_map.png**](dcu_map.png) file is a visual representation of Dublin City University map that we used for our experiments.
 

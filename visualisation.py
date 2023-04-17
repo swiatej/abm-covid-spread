@@ -9,9 +9,9 @@ import networkx as nx
 
 def plotting_infections_isolations():
   '''
-  This function creates a visual representation of a COVID-19 Infections and Isolations
+  This function creates a visual representation of the COVID-19 Infections and Isolations CSV file
   '''
-  # getting current directory, should be the same where model and the csv file saved
+  # getting current directory, should be the same where model and the csv file were saved
   current_dir = os.getcwd()
   # create a folder to store plots
   folder_name = 'graphs'
@@ -51,7 +51,7 @@ def plotting_community_network():
   '''
   This function creates a visual representation of a community network of spreaders and infected people across different faculties
   '''
-  # getting current directory, should be the same where model and the csv file saved
+  # getting current directory, should be the same where model and the csv file were saved
   current_dir = os.getcwd()
   # csv file name
   filename = "Infections_ID.csv"

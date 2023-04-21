@@ -17,7 +17,7 @@ The *virus_spread.py* script outputs two .csv files once it has finished running
 * [**Isolation_And_Infection_Counts.csv**](Isolation_And_Infection_Counts.csv) - Time of new infection, along with student id and faculty name of COVID spreader, and student id and faculty name of newly infected
 
 The script [**visualisation.py**](visualisation.py) takes in the Infections_ID and Isolation_And_Infection_Counts csv's and creates plots. These can be accessed in the [**graphs folder**](graphs).
-The [**visualisation.py**](visualisation.py) script takes as user input the number of spreaders and outputs a community network graph of the top spreaders and the people they have infected (file is called [**community_network_graph.png**](graphs/community_network_graph.png)).
+The script takes as user input the number of spreaders and outputs a community network graph of the top spreaders and the people they have infected (file is called [**community_network_graph.png**](graphs/community_network_graph.png)).
 The second plot that is created is a visual representation of a COVID-19 Infections and Isolations, called [**COVID-19_infections_and_isolations_graph.png**](graphs/COVID-19_infections_and_isolations_graph.png).
 
 ## Model overview

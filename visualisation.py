@@ -65,7 +65,7 @@ def plotting_community_network():
   # calculate the number of times each spreader appears in the dataset
   spreader_counts = df['Spreader_id'].value_counts()
 
-  # pick the 30 most common spreaders
+  # pick the most common spreaders from user input
   top_spreaders = spreader_counts[:num_top_spreaders].index.tolist()
 
   # create a graph
